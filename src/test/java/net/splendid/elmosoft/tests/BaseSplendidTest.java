@@ -21,7 +21,7 @@ public class BaseSplendidTest {
 	public static final Logger LOGGER = LogManager.getLogger(BaseSplendidTest.class);
 	
 	protected SeleniumDriver driver;
-	protected Boolean isRecordVideo = Boolean.getBoolean(System.getProperty("video"));
+	protected Boolean isRecordVideo = Boolean.parseBoolean(System.getProperty("video"));
 
 	@BeforeClass(alwaysRun = true, description = "Class Level Setup")
 	public void classSetUp(ITestContext testContext) {
