@@ -1,7 +1,8 @@
 package net.elmosoft.splendid.browser;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -13,7 +14,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 public class FirefoxFactory extends BrowserFactory {
 
-	private static final Logger LOGGER = Logger.getLogger(FirefoxFactory.class);
+	private static final Logger LOGGER = LogManager.getLogger(FirefoxFactory.class);
 
 	@Override
 	public WebDriver createBrowser(boolean acceptUntrustedCerts,

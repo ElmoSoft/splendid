@@ -5,7 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.elmosoft.splendid.driver.seleniumdriver.SeleniumDriver;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriverException;
 
 
@@ -15,7 +16,7 @@ public class DriverManager {
 	private static List<SeleniumDriver> drivers = Collections
 			.synchronizedList(new LinkedList<SeleniumDriver>());
 	
-	private static final Logger LOGGER = Logger.getLogger(DriverManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(DriverManager.class);
 
 
 	public static SeleniumDriver getDriver() {

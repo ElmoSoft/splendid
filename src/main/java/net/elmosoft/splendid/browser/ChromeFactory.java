@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -13,7 +14,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 
 public class ChromeFactory extends BrowserFactory {
-	private static final Logger LOGGER = Logger.getLogger(ChromeFactory.class);
+	private static final Logger LOGGER = LogManager.getLogger(ChromeFactory.class);
 
 	@Override
 	public WebDriver createBrowser(boolean acceptUntrustedCerts,
@@ -27,7 +28,11 @@ public class ChromeFactory extends BrowserFactory {
 		options.addArguments("--allow-running-insecure-content");
 		options.addArguments("--no-sandbox");
 		options.addArguments("--disable-gpu");
+		options.addArguments("--disable-dev-shm-usage");
 		options.addArguments("--window-size=1600,1400");
+		if (System.getProperty("headless").equals("true")) {
+			options.addArguments("--headless");
+		}
 		//options.setPageLoadStrategy(PageLoadStrategy.NONE);
 		LoggingPreferences loggingprefs = new LoggingPreferences();
 		loggingprefs.enable(LogType.BROWSER, Level.ALL);

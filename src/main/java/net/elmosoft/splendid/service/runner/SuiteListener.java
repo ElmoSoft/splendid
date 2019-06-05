@@ -3,27 +3,35 @@ package net.elmosoft.splendid.service.runner;
 import java.io.IOException;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.testng.IConfigurationListener;
+import org.testng.IResultMap;
+import org.testng.ISuite;
+import org.testng.ISuiteListener;
+import org.testng.ISuiteResult;
+import org.testng.ITestContext;
+import org.testng.ITestListener;
+import org.testng.ITestResult;
+import org.testng.Reporter;
+
 import io.qameta.allure.Attachment;
 import net.elmosoft.splendid.browser.DriverManager;
 import net.elmosoft.splendid.browser.VideoManager;
 import net.elmosoft.splendid.utils.ScreenshotUtils;
-import net.elmosoft.splendid.utils.VideoRecorder;
-import org.apache.log4j.Logger;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.testng.*;
 
 /**
  * @author Aleksei_Mordas
- * 
+ *
  *         e-mail: * alexey.mordas@gmail.com Skype: alexey.mordas
  */
 public class SuiteListener implements ISuiteListener, ITestListener,
 		IConfigurationListener {
 
-	private static final Logger LOGGER = Logger.getLogger(SuiteListener.class);
-	VideoRecorder recorder = new VideoRecorder();
-	private static String fileSeparator = System.getProperty("file.separator");
+	private static final Logger LOGGER = LogManager.getLogger(SuiteListener.class);
+
 //	private static ExtentReports extent = ExtentManager.createInstance();
 //	private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
 
@@ -41,12 +49,6 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 //		saveLog("================================== TEST "
 //				+ result.getName()
 //				+ " FAILED ==================================");
-		try {
-			extractJSLogs();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void extractJSLogs() throws IOException {
@@ -82,7 +84,9 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 		LOGGER.info("================================== TEST "
 				+ result.getName()
 				+ " STARTED ==================================");
-		VideoManager.getVideoRecorder().startRecording(DriverManager.getDriver(), result.getName());
+		if (Boolean.parseBoolean(System.getProperty("video"))) {
+			VideoManager.getVideoRecorder().startRecording(DriverManager.getDriver(), result.getStartMillis() + result.getName());
+		}
 	}
 
 	@Override
@@ -109,7 +113,7 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 
 	@Override
 	public void onFinish(ITestContext context) {
-		LOGGER.info("================================== SUITE "
+		LOGGER.info("================================== CLASS "
 				+ context.getName()
 				+ " FINISHED ==================================");
 	}
@@ -119,11 +123,16 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 		saveLog("================================== SUITE "
 				+ suite.getName()
 				+ " STARTED ==================================");
-
+		LOGGER.info("================================== SUITE "
+				+ suite.getName()
+				+ " STARTED ==================================");
 	}
 
 	@Override
 	public void onFinish(ISuite suite) {
+		LOGGER.info("================================== SUITE "
+				+ suite.getName()
+				+ " FINISHED ==================================");
 
 		boolean isFailed = false;
 

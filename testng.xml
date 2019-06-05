@@ -1,14 +1,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Parkopoly Suite" >
-<!-- 	<test verbose="1" name="Login test" annotations="JDK">
+<suite name="Splendid Suite" >
+ 	<test verbose="1" name="Google test" annotations="JDK">
 		<classes>
-			<class name="net.elmosoft.tests.backoffice.login.LoginTest" />
+			<class name="net.splendid.elmosoft.tests.GoogleTest" />
 		</classes>
 	</test>
-	<test verbose="1" name="Incorrect password test" annotations="JDK">
-		<classes>
-			<class name="net.elmosoft.tests.backoffice.login.LoginWrongPasswordTest" />
-		</classes>
-	</test> -->
 
 </suite>

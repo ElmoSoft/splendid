@@ -3,7 +3,9 @@ package net.elmosoft.splendid.driver.page;
 import net.elmosoft.splendid.browser.DriverManager;
 import net.elmosoft.splendid.driver.element.WaitConditions;
 import net.elmosoft.splendid.driver.seleniumdriver.SeleniumDriver;
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -18,7 +20,7 @@ public abstract class Page {
 
 	protected static final int THIRTY_SECONDS_WAIT = 30;
 	protected static final int THREE_MINUTE_WAIT = 180;
-	public static final Logger LOGGER = Logger.getLogger(Page.class);
+	public static final Logger LOGGER = LogManager.getLogger(Page.class);
 
 	public abstract void checkPage();
 	public abstract void waitForPageIsLoaded();

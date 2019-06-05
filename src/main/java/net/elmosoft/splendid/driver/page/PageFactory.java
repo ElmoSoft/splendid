@@ -4,11 +4,16 @@ import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.elmosoft.splendid.driver.element.Element;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.pagefactory.AndroidFindBy;
+import net.elmosoft.splendid.driver.element.BrowserElement;
+import net.elmosoft.splendid.driver.element.MobileElement;
 import net.elmosoft.splendid.driver.seleniumdriver.SeleniumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
 import net.elmosoft.splendid.driver.annotation.FindBy;
+import net.elmosoft.splendid.driver.element.Element;
 
 
 /**
@@ -18,7 +23,7 @@ import net.elmosoft.splendid.driver.annotation.FindBy;
 public class PageFactory {
 
 	public static <T extends Page> T initElements(SeleniumDriver driver,
-			Class<T> pageClass) {
+												  Class<T> pageClass) {
 		T page = instantiatePage(driver, pageClass);
 		initElements(driver, page);
 		List<Class> list = getSuperClasses(page.getClass());
@@ -29,7 +34,7 @@ public class PageFactory {
 	}
 
 	private static <T extends Page> T instantiatePage(SeleniumDriver driver,
-			Class<T> pageClass) {
+													  Class<T> pageClass) {
 		try {
 			try {
 				Constructor<T> constructor = pageClass
@@ -63,14 +68,37 @@ public class PageFactory {
 
 					}
 				}
+				String browser = System.getProperty("browser");
+				switch (browser.toUpperCase()) {
+					case "ANDROID":
+						if (MobileElement.class.isAssignableFrom(fieldClass)) {
+							AndroidFindBy annotation = field.getAnnotation(AndroidFindBy.class);
+							By by = setAndroidMobileFindByToElement(annotation);
+							Constructor<?> fieldConstructor = fieldClass.getConstructor(SeleniumDriver.class, By.class);
+							field.setAccessible(true);
+							field.set(page, fieldConstructor.newInstance(driver, by));
+						}
+						break;
+					case "IOS":
+//						if (MobileElement.class.isAssignableFrom(fieldClass)) {
+//							AndroidFindBy annotation = field.getAnnotation(IosFindBy.class);
+//							By by = setIosMobileFindByToElement(annotation);
+//							Constructor<?> fieldConstructor = fieldClass.getConstructor(SeleniumDriver.class, By.class);
+//							field.setAccessible(true);
+//							field.set(page, fieldConstructor.newInstance(driver, by));
+//						}
+						break;
+					default:
+						if (BrowserElement.class.isAssignableFrom(fieldClass)) {
+							FindBy annotation = field.getAnnotation(FindBy.class);
+							By by = setFindByToElement(annotation);
+							Constructor<?> fieldConstructor = fieldClass.getConstructor(SeleniumDriver.class, By.class);
+							field.setAccessible(true);
+							field.set(page, fieldConstructor.newInstance(driver, by));
+						}
 
-				if (Element.class.isAssignableFrom(fieldClass)) {
-					FindBy annotation = field.getAnnotation(FindBy.class);
-					By by = setFindByToElement(annotation);
-					Constructor<?> fieldConstructor = fieldClass.getConstructor(SeleniumDriver.class, By.class);
-					field.setAccessible(true);
-					field.set(page, fieldConstructor.newInstance(driver, by));
 				}
+
 
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
@@ -156,6 +184,33 @@ public class PageFactory {
 			else if (!type.isEmpty()) {
 				by = (By.xpath(String.format("//*[@type='%s']", type)));
 			}
+		}
+		return by;
+	}
+
+	private static By setAndroidMobileFindByToElement(AndroidFindBy annotation) {
+		By by = null;
+		if (null != annotation) {
+			String id = annotation.id();
+			String xpath = annotation.xpath();
+			String accessibility = annotation.accessibility();
+			String uiAutomator = annotation.uiAutomator();
+			String tagName = annotation.tagName();
+			if (!id.isEmpty()) {
+				by = MobileBy.id(id);
+			} else if (!xpath.isEmpty()) {
+				by = MobileBy.xpath(xpath);
+			}
+			else if (!accessibility.isEmpty()) {
+				by = MobileBy.AccessibilityId(accessibility);
+			}
+			else if (!uiAutomator.isEmpty()) {
+				by = MobileBy.AndroidUIAutomator(uiAutomator);
+			}
+			else if (!tagName.isEmpty()) {
+				by = MobileBy.AndroidViewTag(tagName);
+			}
+
 		}
 		return by;
 	}

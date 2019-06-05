@@ -6,8 +6,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.qameta.allure.Attachment;
+import net.elmosoft.splendid.browser.DriverManager;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +24,7 @@ public class ScreenshotUtils {
 
 	private static final String SCREENSHOTS = "screenshots";
 
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LogManager
 			.getLogger(ScreenshotUtils.class);
 
 	private static final String DATE_FORMAT = "dd_MMM_yyyy__hh_mm_ssaa_SSS";
@@ -66,5 +69,10 @@ public class ScreenshotUtils {
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
+	}
+
+	@Attachment(value = "Page screenshot", type = "image/png")
+	public synchronized static byte[] makeAllureScreenshot() {
+		return ((TakesScreenshot) DriverManager.getDriver().getWebDriver()).getScreenshotAs(OutputType.BYTES);
 	}
 }

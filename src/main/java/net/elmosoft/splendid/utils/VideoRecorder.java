@@ -15,9 +15,11 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.io.File;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.elmosoft.splendid.driver.seleniumdriver.SeleniumDriver;
-import org.apache.log4j.Logger;
+
 import org.monte.media.Format;
 import org.monte.media.FormatKeys.MediaType;
 import org.monte.media.math.Rational;
@@ -34,9 +36,9 @@ public class VideoRecorder {
     private ScreenRecorder screenRecorder;
     
     final File dir = new File("");
-    private static final Logger LOGGER = Logger
-            .getLogger(VideoRecorder.class);
- 
+    private static final Logger LOGGER = LogManager.getLogger(VideoRecorder.class);
+
+
     public void startRecording(SeleniumDriver driver, final String name) {
  
         try {

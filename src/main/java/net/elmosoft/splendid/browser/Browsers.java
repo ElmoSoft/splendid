@@ -2,7 +2,8 @@ package net.elmosoft.splendid.browser;
 
 public enum Browsers {
 	FF("FF"),
-	CHROME("CHROME");
+	CHROME("CHROME"),
+	ANDROID("ANDROID");
 
 	private String type;
 

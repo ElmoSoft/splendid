@@ -1,7 +1,8 @@
 package net.elmosoft.splendid.browser;
 
 import net.elmosoft.splendid.utils.VideoRecorder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.openqa.selenium.WebDriverException;
 
 import java.util.Collections;
@@ -15,7 +16,7 @@ public class VideoManager {
 	private static List<VideoRecorder> drivers = Collections
 			.synchronizedList(new LinkedList<VideoRecorder>());
 	
-	private static final Logger LOGGER = Logger.getLogger(VideoManager.class);
+	private static final Logger LOGGER = LogManager.getLogger(VideoManager.class);
 
 
 	public static VideoRecorder getVideoRecorder() {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF" packages="net.elmosoft.utils">
+
+	<Properties>
+		<Property name="filename">logs/selenium-tests.log</Property>
+		<Property name="filepattern">logs/$${date:yyyy-MM}/selenium-tests-%d{MM-dd-yyyy}-%i.log.gz
+		</Property>
+		<Property name="layotpattern">%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] %-5level - %msg%n
+		</Property>
+		<Property name="filesize">5 MB</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${layotpattern}" />
+		</Console>
+		<RollingFile name="AqaFile" fileName="${filename}"
+			filePattern="${filepattern}">
+			<PatternLayout pattern="${layotpattern}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy
+					size="${filesize}" />
+			</Policies>
+		</RollingFile>
+		<ReportAppender name="Report">
+			<PatternLayout pattern="${layotpattern}" />
+		</ReportAppender>
+	</Appenders>
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="Report" />
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="AqaFile" />
+		</Root>
+	</Loggers>
+</Configuration>
