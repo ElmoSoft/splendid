@@ -29,7 +29,7 @@
         <browser>chrome</browser>
         <aspectj.version>1.8.13</aspectj.version>
         <headless>false</headless>
-        <video>true</video>
+        <video>false</video>
 
         <!--Dependency Versions-->
         <selenium.version>3.12.0</selenium.version>
