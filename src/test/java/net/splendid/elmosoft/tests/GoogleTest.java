@@ -3,6 +3,7 @@ package net.splendid.elmosoft.tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import net.elmosoft.splendid.service.runner.SuiteListener;
+import net.elmosoft.splendid.test.BaseSplendidTest;
 import net.splendid.elmosoft.steps.GoogleSteps;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;

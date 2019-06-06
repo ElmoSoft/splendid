@@ -1,4 +1,4 @@
-package net.splendid.elmosoft.tests;
+package net.elmosoft.splendid.test;
 
 
 import net.elmosoft.splendid.browser.DriverManager;
