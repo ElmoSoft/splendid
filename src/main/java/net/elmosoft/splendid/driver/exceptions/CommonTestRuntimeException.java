@@ -7,4 +7,14 @@ public class CommonTestRuntimeException extends RuntimeException {
 	public CommonTestRuntimeException(String message) {
 		super(message);
 	}
+
+	public CommonTestRuntimeException() {
+		super();
+	}
+
+	public CommonTestRuntimeException(String message, Throwable cause) {
+		super(message, cause);
+	}
+	
+	
 }

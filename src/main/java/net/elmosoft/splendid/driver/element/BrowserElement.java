@@ -1,26 +1,32 @@
 package net.elmosoft.splendid.driver.element;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 
 import net.elmosoft.splendid.driver.element.helper.FindByHelper;
+import net.elmosoft.splendid.driver.exceptions.CommonTestRuntimeException;
 import net.elmosoft.splendid.driver.exceptions.WaitTimeoutException;
 import net.elmosoft.splendid.driver.seleniumdriver.SeleniumDriver;
 
 
 public class BrowserElement extends Element {
-
+	private static final Logger LOGGER = LogManager.getLogger(Element.class);
+	private By notFormatedBy;
+	protected SeleniumDriver driver;
+	protected By foundBy;
+	private String nameForLogger="";
+	protected String name="";
+	
 	public BrowserElement(SeleniumDriver driver, By foundBy) {
 		this.foundBy = foundBy;
 		this.driver = driver;
+		this.notFormatedBy = foundBy;
 	}
-
-	protected SeleniumDriver driver;
-
-	protected By foundBy;
-
-	private static final Logger LOGGER = LogManager.getLogger(Element.class);
 
 	@Override
 	public boolean isExists() {
@@ -200,10 +206,28 @@ public class BrowserElement extends Element {
 		}
 		return text;
 	}
+	
+	public String getElementNameForLogger() {
+		if (StringUtils.isNotEmpty(nameForLogger)) {
+			return nameForLogger;
+		}
+		if (StringUtils.isNotEmpty(name)) {
+			return name;
+		}
+		return FindByHelper.getStringLocator(notFormatedBy);
+	}
 
-	public BrowserElement format(Object... replaceString) {
-		String locator = String.format(this.foundBy.toString(), replaceString);
-		this.foundBy = FindByHelper.getByNestedObject(locator);
+	
+	public BrowserElement format(Object... args) {
+		nameForLogger = new StringBuilder(name).append(": ").append(Arrays.toString(args)).append("").toString();
+		Class<?> byClass = notFormatedBy.getClass();
+		try {
+			String locatorString = FindByHelper.getStringLocator(notFormatedBy);
+			foundBy = (By) byClass.getConstructor(String.class).newInstance(String.format(locatorString, args));
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			throw new CommonTestRuntimeException("Failed to format locator", e);
+		}
 		return this;
 	}
 }

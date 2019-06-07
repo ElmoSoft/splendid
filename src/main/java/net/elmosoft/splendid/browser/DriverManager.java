@@ -83,7 +83,7 @@ public class DriverManager {
 
 	public static SeleniumDriver getNewDriver() {
 		LOGGER.info("Create new instance of Driver.");
-		SeleniumDriver driver = new SeleniumDriver(Browsers.valueOf(System.getProperty("browser").toUpperCase()));
+		SeleniumDriver driver = new SeleniumDriver(Browsers.valueOf(System.getProperty("browser","CHROME").toUpperCase()));
 		drivers.add(driver);
 		defaultDriver.set(driver);
 		return driver;

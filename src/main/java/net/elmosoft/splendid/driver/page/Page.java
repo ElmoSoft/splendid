@@ -32,6 +32,10 @@ public abstract class Page {
 		PageFactory.initElements(driver, this);
 	}
 	
+	protected<T extends Page>T initPage(Class<T> clazz){
+		T page = PageFactory.initElements( DriverManager.getDriver(), clazz);
+		return page;
+	}
 
 	protected String getImagePath(String nameImg) {
 		return "src\\test\\resources\\images\\" + nameImg;

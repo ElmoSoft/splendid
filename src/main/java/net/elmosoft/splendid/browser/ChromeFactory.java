@@ -30,7 +30,7 @@ public class ChromeFactory extends BrowserFactory {
 		options.addArguments("--disable-gpu");
 		options.addArguments("--disable-dev-shm-usage");
 		options.addArguments("--window-size=1600,1400");
-		if (System.getProperty("headless").equals("true")) {
+		if (System.getProperty("headless","false").equals("true")) {
 			options.addArguments("--headless");
 		}
 		//options.setPageLoadStrategy(PageLoadStrategy.NONE);

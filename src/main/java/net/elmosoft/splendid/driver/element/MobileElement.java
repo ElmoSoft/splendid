@@ -13,5 +13,10 @@ public class MobileElement extends BrowserElement {
 	public MobileElement(SeleniumDriver driver, By foundBy) {
 		super(driver,foundBy);
 	}
+	
+	@Override
+	public MobileElement format(Object... args) {
+		return (MobileElement) super.format(args);
+	}
 
 }

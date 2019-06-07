@@ -9,8 +9,9 @@ import io.appium.java_client.pagefactory.AndroidFindBy;
 import net.elmosoft.splendid.driver.element.BrowserElement;
 import net.elmosoft.splendid.driver.element.MobileElement;
 import net.elmosoft.splendid.driver.seleniumdriver.SeleniumDriver;
+
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
 import net.elmosoft.splendid.driver.annotation.FindBy;
 import net.elmosoft.splendid.driver.element.Element;
@@ -26,10 +27,10 @@ public class PageFactory {
 												  Class<T> pageClass) {
 		T page = instantiatePage(driver, pageClass);
 		initElements(driver, page);
-		List<Class> list = getSuperClasses(page.getClass());
-		for( Class superClass: list){
-			initFields(page, superClass.getDeclaredFields(), driver );
-		}
+//		List<Class> list = getSuperClasses(page.getClass());
+//		for( Class superClass: list){
+//			initFields(page, superClass.getDeclaredFields(), driver );
+//		}
 		return page;
 	}
 
@@ -48,6 +49,7 @@ public class PageFactory {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void initFields(Page page, Field[] fields, SeleniumDriver driver ) {
 		for (Field field : fields) {
 
@@ -68,7 +70,7 @@ public class PageFactory {
 
 					}
 				}
-				String browser = System.getProperty("browser");
+				String browser = System.getProperty("browser","");
 				switch (browser.toUpperCase()) {
 					case "ANDROID":
 						if (MobileElement.class.isAssignableFrom(fieldClass)) {
@@ -94,7 +96,9 @@ public class PageFactory {
 							By by = setFindByToElement(annotation);
 							Constructor<?> fieldConstructor = fieldClass.getConstructor(SeleniumDriver.class, By.class);
 							field.setAccessible(true);
-							field.set(page, fieldConstructor.newInstance(driver, by));
+							BrowserElement element = (BrowserElement) fieldConstructor.newInstance(driver, by);
+							FieldUtils.writeField(element, "name", field.getName(), true);
+							field.set(page, element);
 						}
 
 				}
@@ -108,7 +112,17 @@ public class PageFactory {
 
 
 	public static <T extends Page> void initElements(SeleniumDriver driver, T page) {
-		initFields(page, page.getClass().getDeclaredFields(), driver);
+		Class<?> pageClass = page.getClass();
+		List<Field> annotatedFields = new ArrayList<Field>();
+		while(Page.class.isAssignableFrom(pageClass)) {
+			for(Field field: pageClass.getDeclaredFields()) {
+				if(field.isAnnotationPresent(FindBy.class)) {
+					annotatedFields.add(field);
+				}
+			}
+			pageClass = pageClass.getSuperclass();
+		}
+		initFields(page, annotatedFields.toArray(new Field[0]), driver);
 	}
 
 	public static List<Class> getSuperClasses(Class clazz) {
