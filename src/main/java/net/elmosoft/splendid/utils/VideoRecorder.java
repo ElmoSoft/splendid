@@ -45,7 +45,7 @@ public class VideoRecorder {
             GraphicsConfiguration gc = GraphicsEnvironment
                 .getLocalGraphicsEnvironment().getDefaultScreenDevice()
                 .getDefaultConfiguration();
-            File videoDirectory = new File("test-output"+fileSeparator+"html");;
+            File videoDirectory = new File("target"+ fileSeparator+"test-output"+fileSeparator+"html");
             File directory = new File(  videoDirectory,VIDEOS + fileSeparator);
             Point point = driver.getWebDriver().manage().window().getPosition();
             Dimension dimension = driver.getWebDriver().manage().window().getSize();

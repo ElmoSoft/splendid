@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.elmosoft</groupId>
     <artifactId>splendid</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.4</version>
     <url>http://elmosoft.net</url>
 
     <distributionManagement>
