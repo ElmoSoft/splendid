@@ -27,10 +27,16 @@
 		</ReportAppender>
 	</Appenders>
 	<Loggers>
-		<Root level="info">
+	    <Logger name="org.apache.http" level="INFO" additivity="false">
+      		<AppenderRef ref="Report" />
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="AqaFile" />
+   		 </Logger>
+		<Root level="trace">
 			<AppenderRef ref="Report" />
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="AqaFile" />
 		</Root>
+		
 	</Loggers>
 </Configuration>
