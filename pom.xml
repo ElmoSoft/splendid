@@ -36,7 +36,7 @@
         <webdrivermanager.version>3.0.0</webdrivermanager.version>
         <allure-maven.version>2.9</allure-maven.version>
         <testng.version>6.14.3</testng.version>
-        <log4j.version>2.8.1</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <commons-cli.version>1.2</commons-cli.version>
         <reportng.version>1.1.4</reportng.version>
         <guice.version>3.0</guice.version>
