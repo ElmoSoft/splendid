@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Splendid Suite" >
+ 	<test verbose="1" name="Google test" annotations="JDK">
+		<classes>
+			<class name="net.splendid.elmosoft.mobile_tests.MobileDemoTest" />
+		</classes>
+	</test>
+
+</suite>
