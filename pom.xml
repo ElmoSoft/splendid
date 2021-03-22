@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.elmosoft</groupId>
     <artifactId>splendid</artifactId>
-    <version>1.1.4</version>
-    <url>http://elmosoft.net</url>
+    <version>1.1.5</version>
+    <url>https://elmosoft.net</url>
 
     <distributionManagement>
         <snapshotRepository>
@@ -26,21 +26,26 @@
         <read.timeout>60000</read.timeout>
         <connection.timeout>40000</connection.timeout>
         <retry.attempts>4</retry.attempts>
-        <browser>chrome</browser>
-        <aspectj.version>1.8.13</aspectj.version>
+
+        <!--Framework Options-->
+        <browser>ios</browser>
+        <autoScreenshot>true</autoScreenshot>
         <headless>false</headless>
         <video>false</video>
+        <threadCount>1</threadCount>
+        <suitethreadpoolsize>1</suitethreadpoolsize>
+        <remoteDriver>false</remoteDriver>
+        <remoteWebdriverUrl>0.0.0.0</remoteWebdriverUrl>
 
         <!--Dependency Versions-->
-        <selenium.version>3.12.0</selenium.version>
-        <webdrivermanager.version>3.0.0</webdrivermanager.version>
+        <aspectj.version>1.8.13</aspectj.version>
+        <webdrivermanager.version>4.3.1</webdrivermanager.version>
         <allure-maven.version>2.9</allure-maven.version>
         <testng.version>6.14.3</testng.version>
         <log4j.version>2.8.1</log4j.version>
         <commons-cli.version>1.2</commons-cli.version>
         <reportng.version>1.1.4</reportng.version>
         <guice.version>3.0</guice.version>
-        <lombok.version>1.18.2</lombok.version>
         <allure-testng.version>2.7.0</allure-testng.version>
         <commons-io.version>2.4</commons-io.version>
         <htmlunit.version>2.24</htmlunit.version>
@@ -52,7 +57,7 @@
         <google-gson.version>2.8.5</google-gson.version>
         <mifmif.version>1.0.2</mifmif.version>
         <iban4j.version>3.2.1</iban4j.version>
-        <appium.version>7.0.0</appium.version>
+        <appium.version>7.4.1</appium.version>
         <restassured.version>3.3.0</restassured.version>
         <joda-time.version>2.10.1</joda-time.version>
     </properties>
@@ -74,7 +79,7 @@
                 <version>2.18.1</version>
                 <configuration>
                     <reportsDirectory>${project.build.directory}/test-output</reportsDirectory>
-                    <forkCount>2</forkCount>
+<!--                    <forkCount>2</forkCount>-->
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
@@ -83,9 +88,13 @@
                         <browser>${browser}</browser>
                         <org.uncommons.reportng.escape-output>false</org.uncommons.reportng.escape-output>
                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                        <browser.downloads.directory>${project.build.directory}/downloads</browser.downloads.directory>
                         <buildDirectory>${project.build.directory}</buildDirectory>
                         <headless>${headless}</headless>
                         <file.encoding>${project.reporting.outputEncoding}</file.encoding>
+                        <remoteWebdriverUrl>${remoteWebdriverUrl}</remoteWebdriverUrl>
+                        <remoteDriver>${remoteDriver}</remoteDriver>
+                        <autoScreenshot>${autoScreenshot}</autoScreenshot>
                     </systemPropertyVariables>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"                    </argLine>
@@ -120,7 +129,6 @@
             <version>${webdrivermanager.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -157,13 +165,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
             <version>${allure-testng.version}</version>
@@ -181,18 +182,6 @@
             <version>${htmlunit.version}</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.seleniumhq.selenium</groupId>-->
-        <!--            <artifactId>selenium-remote-driver</artifactId>-->
-        <!--            <version>${selenium.version}</version>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.seleniumhq.selenium</groupId>-->
-        <!--            <artifactId>selenium-java</artifactId>-->
-        <!--            <version>${selenium.version}</version>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>net.sourceforge.htmlcleaner</groupId>
             <artifactId>htmlcleaner</artifactId>
@@ -203,12 +192,6 @@
             <groupId>com.github.stephenc.monte</groupId>
             <artifactId>monte-screen-recorder</artifactId>
             <version>0.7.7.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>${webdrivermanager.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -246,6 +229,12 @@
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>${appium.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>4.3.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

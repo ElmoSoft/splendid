@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GoogleMainPage extends Page {
 
-    @FindBy(id="hplogo")
+    @FindBy(xpath = "//*[@alt='Google']")
     private BrowserElement logo;
 
     @FindBy(xpath="//input[@name='q']")

@@ -68,7 +68,7 @@ public class ScreenshotUtils {
 	}
 
 	@Attachment(value = "Page screenshot", type = "image/png")
-	public synchronized static byte[] makeAllureScreenshot() {
-		return ((TakesScreenshot) DriverManager.getDriver().getWebDriver()).getScreenshotAs(OutputType.BYTES);
+	public synchronized static byte[] makeAllureScreenshot(WebDriver driver) {
+		return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 	}
 }

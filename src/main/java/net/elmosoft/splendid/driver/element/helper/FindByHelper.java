@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ByIdOrName;
 import net.elmosoft.splendid.driver.exceptions.CommonTestRuntimeException;
 
 public class FindByHelper {
-	
+
 	public static By getByObject(String locator) {
 		if (locator.startsWith("By.xpath: ")) {
 			return By.xpath(locator.replace("By.xpath: ",""));
@@ -34,8 +34,8 @@ public class FindByHelper {
 		}
 		return null;
 	}
-	
-	
+
+
 	public static String getLocatorFieldName(By by)
 	{
 		if(by instanceof ByClassName)
@@ -76,7 +76,7 @@ public class FindByHelper {
 		}
 		throw new CommonTestRuntimeException("Method format is not available for " + by.toString());
 	}
-	
+
 	public static String getStringLocator(By by) {
 		String fieldName = getLocatorFieldName(by);
 		try {

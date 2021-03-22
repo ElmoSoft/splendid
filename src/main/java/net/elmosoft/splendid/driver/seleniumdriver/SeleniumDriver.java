@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import java.util.function.Supplier;
 import net.elmosoft.splendid.browser.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
@@ -46,7 +48,7 @@ public class SeleniumDriver implements WebDriver {
 
 	public SeleniumDriver(Browsers browserType) {
 		switch (browserType) {
-			case FF:
+			case FIREFOX:
 				driver = new FirefoxFactory().createBrowser(true, false);
 				driver.manage().window().maximize();
 				break;
@@ -57,9 +59,11 @@ public class SeleniumDriver implements WebDriver {
 			case ANDROID:
 				driver = new AndroidFactory().createBrowser();
 				break;
-
+			case IOS:
+				driver = new IosFactory().createBrowser();
+				break;
 			default:
-				throw new RuntimeException("not implemented");
+				throw new RuntimeException(browserType + " not implemented");
 		}
 
 		//driver.manage().window().setSize(new Dimension(X_DIMENSION, Y_DIMENSION));
@@ -143,7 +147,7 @@ public class SeleniumDriver implements WebDriver {
 
 	@Override
 	public void quit() {
-		LOGGER.debug("Browser quite");
+		LOGGER.debug("Browser quit");
 		this.driver.quit();
 	}
 
@@ -223,8 +227,10 @@ public class SeleniumDriver implements WebDriver {
 	}
 
 	public void click(By by) {
-		ScreenshotUtils.makeScreenshot(DriverManager.getDriver().getWebDriver(), StringUtils.getDateTimeStamp());
-		ScreenshotUtils.makeAllureScreenshot();
+		if (Boolean.parseBoolean(System.getProperty("autoScreenshot"))){
+			ScreenshotUtils.makeScreenshot(DriverManager.getDriver().getWebDriver(), StringUtils.getDateTimeStamp());
+			ScreenshotUtils.makeAllureScreenshot(DriverManager.getDriver().getWebDriver());
+		}
 		LOGGER.info("Clicking element '" + by + "' ...");
 		int attempts = 0;
 		while (attempts < 4) {
@@ -505,9 +511,46 @@ public class SeleniumDriver implements WebDriver {
 		}
 	}
 
+	public void leftClick(By by) {
+		ScreenshotUtils.makeAllureScreenshot(driver);
+		LOGGER.info("Mouse clicking element '" + by + "' ...");
+		isElementExists(by);
+		Actions action = new Actions(driver);
+		action.moveToElement(driver.findElement(by)).click().build().perform();
+	}
+
 	public void waitForUrlContain(String url, int waitTimeout) {
 		WebDriverWait wait = new WebDriverWait(driver, waitTimeout);
 		ExpectedCondition<Boolean> urlIsCorrect = arg0 -> driver.getCurrentUrl().contains(url);
 		wait.until(urlIsCorrect);
+	}
+
+	public void waitForElementTextNotNull(final By locator, long timeOutInSeconds) {
+		LOGGER.debug("Waiting for element text to not be null during " + timeOutInSeconds + "sec timeout ...");
+		new WebDriverWait(driver, timeOutInSeconds)
+				.until((Function<WebDriver, Boolean>) driver -> driver.findElement(locator).getText() != null);
+	}
+
+	public void browserType(By locator, String text) {
+		type(locator, text);
+		if(System.getProperty("browser").equalsIgnoreCase("chrome")) {
+			String value = driver.findElement(locator).getAttribute("value");
+			if (!value.equals(text)) {
+				driver.findElement(locator).clear();
+				driver.findElement(locator).sendKeys(text);
+			}
+		}
+	}
+
+	public <T> T performIgnoreException(Supplier<T> supplier) {
+		try {
+			LOGGER.info("Command will be performed with the exception ignoring");
+			return supplier.get();
+		} catch (WebDriverException var3) {
+			LOGGER.info("Webdriver exception has been fired. One more attempt to execute action.");
+			LOGGER.info(supplier.toString());
+			LOGGER.info(var3);
+			return supplier.get();
+		}
 	}
 }

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriverException;
 import org.testng.IConfigurationListener;
 import org.testng.IResultMap;
 import org.testng.ISuite;
@@ -32,8 +33,6 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 
 	private static final Logger LOGGER = LogManager.getLogger(SuiteListener.class);
 
-//	private static ExtentReports extent = ExtentManager.createInstance();
-//	private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
 
 	@Override
 	public void onTestFailure(ITestResult result) {
@@ -44,8 +43,8 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 		LOGGER.info("================================== TEST "
 				+ result.getName()
 				+ " FAILED ==================================");
-		makeScreenshot();
-		DriverManager.getDriver().refresh();
+		makeAllureScreenshot();
+		makeAllureMobileScreenshot();
 //		saveLog("================================== TEST "
 //				+ result.getName()
 //				+ " FAILED ==================================");
@@ -93,7 +92,7 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 	public void onTestSuccess(ITestResult result) {
 		ScreenshotUtils.makeScreenshot(DriverManager.getDriver().getWebDriver(),
 				result.getTestContext().getName() + "_" + result.getName());
-		makeScreenshot();
+		makeAllureScreenshot();
 		LOGGER.info("================================== TEST "
 				+ result.getName()
 				+ " SUCCESS ==================================");
@@ -181,8 +180,25 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 	}
 
 	@Attachment(value = "Page screenshot", type = "image/png")
-	private byte[] makeScreenshot() {
-		return ((TakesScreenshot) DriverManager.getDriver().getWebDriver()).getScreenshotAs(OutputType.BYTES);
+	private byte[] makeAllureScreenshot() {
+		try {
+			return ((TakesScreenshot) DriverManager.getDriver().getWebDriver()).getScreenshotAs(OutputType.BYTES);
+		} catch (WebDriverException e) {
+			LOGGER.error("Screenshot making error", e);
+			return null;
+		}
+	}
+
+	@Attachment(value = "Screen screenshot", type = "image/png")
+	private byte[] makeAllureMobileScreenshot() {
+		if (DriverManager.isDefaultMobileDriver()) {
+			try {
+				return ((TakesScreenshot) DriverManager.getMobileDriver().getWebDriver()).getScreenshotAs(OutputType.BYTES);
+			} catch (WebDriverException e) {
+				LOGGER.error("Screenshot making error", e);
+			}
+		}
+		return null;
 	}
 
 	@Attachment(value = "{0}", type = "text/plain")

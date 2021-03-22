@@ -42,7 +42,7 @@ public class BaseSplendidTest {
 
 	@AfterSuite(alwaysRun = true, description = "Suite Level Tear Down")
 	public void suiteTearDown() {
-		DriverManager.closeDefaultDriver();
+		DriverManager.closeAllOpenedBrowsers();
 	}
 
 	@AfterMethod(alwaysRun = true, description = "Method Level Tear Down")

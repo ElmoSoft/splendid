@@ -3,6 +3,9 @@ package net.elmosoft.splendid.driver.annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * use annotation for th web automation
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FindBy {
 

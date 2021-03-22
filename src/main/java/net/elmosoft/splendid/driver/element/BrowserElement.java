@@ -21,12 +21,13 @@ public class BrowserElement extends Element {
 	protected By foundBy;
 	private String nameForLogger="";
 	protected String name="";
-	
+	private String formatLocator;
+
 	public BrowserElement(SeleniumDriver driver, By foundBy) {
 		this.foundBy = foundBy;
 		this.driver = driver;
-		this.notFormatedBy = foundBy;
 	}
+
 
 	@Override
 	public boolean isExists() {
@@ -49,6 +50,22 @@ public class BrowserElement extends Element {
 		}
 	}
 
+	public void waitForElementNotClickable(long timeoutSeconds) {
+		try {
+			driver.waitForElementClickable(foundBy, timeoutSeconds);
+		} catch (Exception e) {
+			throw new WaitTimeoutException("Failed to wait element: " + foundBy + e.getMessage());
+		}
+	}
+
+	public void waitForElementTextNotNull(long timeoutSeconds) {
+		try {
+			driver.waitForElementTextNotNull(foundBy, timeoutSeconds);
+		} catch (Exception e) {
+			throw new WaitTimeoutException("Failed to wait element: " + foundBy + e.getMessage());
+		}
+	}
+
 	@Override
 	public void waitForElementDisplayed(long timeoutSeconds) {
 		try {
@@ -60,7 +77,7 @@ public class BrowserElement extends Element {
 	}
 
 	@Override
-	public void waitForElementDissappear(long timeoutSeconds) {
+	public void waitForElementDissappear(long timeoutSeconds) throws WaitTimeoutException {
 		try {
 			driver.waitForElementDissappear(foundBy, timeoutSeconds);
 		} catch (Exception e) {
@@ -82,7 +99,7 @@ public class BrowserElement extends Element {
 		try {
 			driver.waitForElement(foundBy, timeoutSeconds);
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to wait element: "+ foundBy
+			throw new WaitTimeoutException("Failed to wait element: "+ foundBy
 					+ e.getMessage());
 		}
 	}
@@ -106,6 +123,10 @@ public class BrowserElement extends Element {
 		driver.click(foundBy);
 	}
 
+	public void leftClick() {
+		driver.leftClick(foundBy);
+	}
+
 	public By getFoundBy() {
 		return foundBy;
 	}
@@ -115,7 +136,13 @@ public class BrowserElement extends Element {
 	}
 
 	public void type(String text) {
-		driver.type(foundBy, text);
+		driver.browserType(foundBy, text);
+	}
+
+	public void clickAndType(String text) {
+		waitForElementClickable(5);
+		click();
+		driver.browserType(foundBy, text);
 	}
 
 	public WebElement getWebElement() {
@@ -206,7 +233,14 @@ public class BrowserElement extends Element {
 		}
 		return text;
 	}
-	
+
+	public String getTextIfElementExist() {
+		if (isExists()) {
+			return getText();
+		}
+		return null;
+	}
+
 	public String getElementNameForLogger() {
 		if (StringUtils.isNotEmpty(nameForLogger)) {
 			return nameForLogger;
@@ -217,7 +251,6 @@ public class BrowserElement extends Element {
 		return FindByHelper.getStringLocator(notFormatedBy);
 	}
 
-	
 	public BrowserElement format(Object... args) {
 		nameForLogger = new StringBuilder(name).append(": ").append(Arrays.toString(args)).append("").toString();
 		Class<?> byClass = notFormatedBy.getClass();
@@ -229,5 +262,15 @@ public class BrowserElement extends Element {
 			throw new CommonTestRuntimeException("Failed to format locator", e);
 		}
 		return this;
+	}
+
+	public Point getLocation() {
+		return driver.findElement(foundBy).getLocation();
+	}
+
+
+	public Dimension getSize() {
+		LOGGER.debug("Getting element size '" + foundBy + "' ...");
+		return driver.findElement(foundBy).getSize();
 	}
 }
