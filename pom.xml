@@ -47,7 +47,7 @@
         <reportng.version>1.1.4</reportng.version>
         <guice.version>3.0</guice.version>
         <allure-testng.version>2.7.0</allure-testng.version>
-        <commons-io.version>2.4</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <htmlunit.version>2.24</htmlunit.version>
         <htmlcleaner.version>2.6.1</htmlcleaner.version>
         <monte-screen-recorder.version>0.7.7</monte-screen-recorder.version>
